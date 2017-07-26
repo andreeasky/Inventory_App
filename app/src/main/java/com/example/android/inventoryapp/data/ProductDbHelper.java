@@ -8,7 +8,9 @@ import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 public class ProductDbHelper extends SQLiteOpenHelper {
 
-    /** Name of the database file */
+    /**
+     * Name of the database file
+     */
     private static final String DATABASE_NAME = "inventory.db";
 
     /**
@@ -31,7 +33,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the inventory table
-        String SQL_CREATE_INVENTORY_TABLE =  "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
+        String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + ProductEntry.TABLE_NAME + " ("
                 + ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
                 + ProductEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL, "

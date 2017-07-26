@@ -10,7 +10,7 @@ public class ProductContract {
      * CONTENT AUTHORITY is defined according to AndroidManifest and Product Provider.
      * <p>
      * The "Content authority" is a name for the entire content provider, similar to the
-     * relationship between a domain name and its website.  A convenient string to use for the
+     * relationship between a domain name and its website. A convenient string to use for the
      * content authority is the package name for the app, which is guaranteed to be unique on the
      * device.
      */
@@ -36,8 +36,8 @@ public class ProductContract {
     }
 
     /**
-     * Inner class that defines constant values for the pets database table.
-     * Each entry in the table represents a single pet.
+     * Inner class that defines constant values for the products database table.
+     * Each entry in the table represents a single product.
      */
     public static final class ProductEntry implements BaseColumns {
 
