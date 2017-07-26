@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Inventory App</string>
+
+    <string name="empty_state_text_view">No products found.</string>
+
+    <string name="edit_text_name">Flowers</string>
+    <string name="product_name">Product Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="price">Price</string>
+    <string name="quantity_value">0</string>
+    <string name="button_increase_value">+</string>
+    <string name="button_decrease_value">-</string>
+    <string name="update_quantity">Update Quantity by:</string>
+    <string name="edit_text_quantity">7</string>
+    <string name="edit_price">0.00</string>
+    <string name="button_choose_image">Select Image</string>
+    <string name="button_order">Order from Supplier</string>
+    <string name="button_sale">sale</string>
+
+</resources>
