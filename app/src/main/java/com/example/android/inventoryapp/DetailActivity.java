@@ -131,8 +131,8 @@ public class DetailActivity extends AppCompatActivity implements
             getLoaderManager().initLoader(URI_LOADER, null, this);
         }
 
-        // Find all relevant views that we will need to read or show user input
-        initialiseViews();
+        // Order from supplier statement
+        orderFromSupplier();
 
         Button selectImageButton = (Button) findViewById(R.id.button_choose_image);
 
@@ -229,7 +229,7 @@ public class DetailActivity extends AppCompatActivity implements
         });
     }
 
-    private void initialiseViews() {
+    private void orderFromSupplier() {
         // Check if there is an existing product to make button visible so the user can order more from the existing product
         if (productUri != null) {
             // Initialise Order Button to order more from the supplier
@@ -253,6 +253,7 @@ public class DetailActivity extends AppCompatActivity implements
             });
         }
     }
+
 
     /**
      * Fires an intent to spin up the "file chooser" UI and select an image.
