@@ -172,7 +172,6 @@ public class DetailActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 // Decrease 1 unit to product quantity if it is higher than 0
-                productQuantity++;
                 if (productQuantity > 0) {
                     productQuantity--;
                     //Update UI
@@ -218,8 +217,6 @@ public class DetailActivity extends AppCompatActivity implements
                         // Decrease the quantity in the Edit Text to the variable keeping track of product stock quantity
                         productQuantity -= Integer.valueOf(quantityEditText.getText().toString());
 
-
-                        productQuantity += Integer.valueOf(quantityEditText.getText().toString());
                         // Update to the UI
                         quantityTextView.setText(String.valueOf(productQuantity));
                     }
@@ -246,7 +243,7 @@ public class DetailActivity extends AppCompatActivity implements
                     intent.setData(Uri.parse("mailto:"));
                     intent.setType("text/plain");
                     // Defining supplier's e-mail
-                    intent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.supplier_email));
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"supplier@suppliercompany.com"});
                     intent.putExtra(Intent.EXTRA_SUBJECT, productName);
                     startActivity(Intent.createChooser(intent, "Send e-mail..."));
                     if (intent.resolveActivity(getPackageManager()) != null) {
