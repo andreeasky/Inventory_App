@@ -132,12 +132,7 @@ public class DetailActivity extends AppCompatActivity implements
             // and display the current values in the editor
             getLoaderManager().initLoader(URI_LOADER, null, this);
         }
-
-        // Find all relevant views that need to be read or to show user input
-        initialiseViews();
-
-        // Set OnClickListener to all relevant views
-        setOnClickListener();
+    }
 
         /**
          * Fires an intent to spin up the "file chooser" UI and select an image.
@@ -174,22 +169,21 @@ public class DetailActivity extends AppCompatActivity implements
                 // Instead, a URI to that document will be contained in the return intent
                 // provided to this method as a parameter.
                 // Pull that URI using resultData.getData().
-                Uri uri = null;
+                Uri productUri = null;
                 if (resultData != null) {
-                    uri = resultData.getData();
-                    Log.i(LOG_TAG, "Uri: " + uri.toString());
-                    showImage(uri);
+                    productUri = resultData.getData();
+                    Log.i(LOG_TAG, "Uri: " + productUri.toString());
+                    productImageView.setImageURI(productUri);
                 }
             }
+
+            final int takeFlags = resultData.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            // Check for the freshest data.
+            getContentResolver().takePersistableUriPermission(productUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getContentResolver().takePersistableUriPermission(productUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
-
-        final int takeFlags = intent.getFlags()
-                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        // Check for the freshest data.
-        getContentResolver().takePersistableUriPermission(uri, takeFlags);
-    }
-
 
     private void initialiseViews() {
         // Check if there is an existing product to make button visible so the user can order more from the existing product
@@ -302,23 +296,6 @@ public class DetailActivity extends AppCompatActivity implements
             }
         });
     }
-
-    // Setup OnTouchListeners on all the input fields, so we can determine if the user
-    // has touched or modified them. This will let us know if there are unsaved changes
-    // or not, if the user tries to leave the editor without saving.
-    private void setOnClickListener() {
-        nameEditText.setOnClickListener(mClickListener);
-        quantityEditText.setOnClickListener(mClickListener);
-        priceEditText.setOnClickListener(mClickListener);
-        increaseQuantityByOneButton.setOnClickListener(mClickListener);
-        decreaseQuantityByOneButton.setOnClickListener(mClickListener);
-        increaseQuantityByManyUnitsButton.setOnClickListener(mClickListener);
-        increaseQuantityByManyUnitsButton.setOnClickListener(mClickListener);
-        selectImageButton.setOnClickListener(mClickListener);
-
-    }
-
-
 
     /**
      * Get user input from editor and save product into database.

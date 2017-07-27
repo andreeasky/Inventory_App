@@ -25,7 +25,7 @@
             android:padding="10dp"
             android:text="@string/empty_state_text_view"
             android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>
