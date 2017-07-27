@@ -53,6 +53,7 @@
             android:id="@+id/quantity_final"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
             android:layout_weight="1.3"
             android:text="@string/quantity_value"
             android:textSize="15sp"
@@ -62,7 +63,7 @@
             android:id="@+id/button_decrease_by_one"
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:layout_marginLeft="4dp"
+            android:layout_marginRight="40dp"
             android:text="@string/button_decrease_by_one" />
 
         <Button
@@ -91,7 +92,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button_increase_qty_by_many_units"
+            android:id="@+id/button_decrease_qty_by_many_units"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:text="@string/button_decrease_value" />
@@ -108,7 +109,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button_decrease_qty_by_many_units"
+            android:id="@+id/button_increase_qty_by_many_units"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_marginEnd="15dp"
@@ -145,8 +146,8 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="225dp"
-        android:layout_height="225dp"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="4dp">
@@ -155,7 +156,7 @@
             android:id="@+id/product_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"
+            android:layout_weight="8"
             android:adjustViewBounds="true"
             android:src="@drawable/flowers" />
 
@@ -163,6 +164,7 @@
             android:id="@+id/button_choose_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="1.7"
             android:text="@string/button_choose_image"
             android:textAllCaps="true" />

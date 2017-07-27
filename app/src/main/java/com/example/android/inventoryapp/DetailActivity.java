@@ -47,6 +47,8 @@ public class DetailActivity extends AppCompatActivity implements
      * URI loader
      */
     private static final int URI_LOADER = 0;
+    // Request code for accessing and using the photos from the storage of the device used
+    private static final int READ_REQUEST_CODE = 42;
     /**
      * Content URI for the existing product (null if it's a new product)
      */
@@ -84,18 +86,14 @@ public class DetailActivity extends AppCompatActivity implements
      * Four Buttons that will be used to update quantity
      */
     private Button increaseQuantityByOneButton;          // Increase by one
-    private Button decreaseQuantityByOneButton;          // DDecrease by one
+    private Button decreaseQuantityByOneButton;          // Decrease by one
     private Button increaseQuantityByManyUnitsButton;    // Increase by many (n)
     private Button decreaseQuantityByManyUnitsButton;    // Decrease by many (n)
-
     /**
      * Button to select image, ImageView to display selected image
      */
-    private Button selectImageButton;
-    private ImageView productImageView;
 
-    // Request code for accessing and using the photos from the storage of the device used
-    private static final int READ_REQUEST_CODE = 42;
+    private ImageView productImageView;
 
     // Convert from bitmap to byte array
     // Data retrieved from the user gallery that will be converted to byte[] in order to store in database BLOB
@@ -132,88 +130,25 @@ public class DetailActivity extends AppCompatActivity implements
             // and display the current values in the editor
             getLoaderManager().initLoader(URI_LOADER, null, this);
         }
-    }
 
-        /**
-         * Fires an intent to spin up the "file chooser" UI and select an image.
-         */
-        public void performFileSearch() {
+        // Find all relevant views that we will need to read or show user input
+        initialiseViews();
 
-            // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
-            // browser.
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Button selectImageButton = (Button) findViewById(R.id.button_choose_image);
 
-            // Filter to only show results that can be "opened", such as a
-            // file (as opposed to a list of contacts or timezones)
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-            // Filter to show only images, using the image MIME data type.
-            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-            // To search for all documents available via installed storage providers,
-            // it would be "*/*".
-            intent.setType("image/*");
-
-            startActivityForResult(intent, READ_REQUEST_CODE);
-        }
-
-        @Override
-        public void onActivityResult(int requestCode, int resultCode,
-        Intent resultData) {
-
-            // The ACTION_OPEN_DOCUMENT intent was sent with the request code
-            // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
-            // response to some other intent, and the code below shouldn't run at all.
-
-            if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                // The document selected by the user won't be returned in the intent.
-                // Instead, a URI to that document will be contained in the return intent
-                // provided to this method as a parameter.
-                // Pull that URI using resultData.getData().
-                Uri productUri = null;
-                if (resultData != null) {
-                    productUri = resultData.getData();
-                    Log.i(LOG_TAG, "Uri: " + productUri.toString());
-                    productImageView.setImageURI(productUri);
-                }
+        selectImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                performFileSearch();
             }
-
-            final int takeFlags = resultData.getFlags()
-                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            // Check for the freshest data.
-            getContentResolver().takePersistableUriPermission(productUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            getContentResolver().takePersistableUriPermission(productUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }
-
-    private void initialiseViews() {
-        // Check if there is an existing product to make button visible so the user can order more from the existing product
-        if (productUri != null) {
-            // Initialise Order Button to order more from the supplier
-            orderButton = (Button) findViewById(R.id.button_order);
-            // Make Button visible
-            orderButton.setVisibility(View.VISIBLE);
-            orderButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setData(Uri.parse("mailto:"));
-                    intent.setType("text/plain");
-                    // Defining supplier's e-mail
-                    intent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.supplier_email));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, productName);
-                    startActivity(Intent.createChooser(intent, "Send e-mail..."));
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivity(intent);
-                    }
-                }
-            });
-        }
+        });
 
         // Find all relevant views that we will need to read user input from
         nameEditText = (EditText) findViewById(R.id.edit_product_name);
         quantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         priceEditText = (EditText) findViewById(R.id.edit_price);
         productImageView = (ImageView) findViewById(R.id.product_image);
+
 
         // Initialise TextView
         quantityTextView = (TextView) findViewById(R.id.quantity_final);
@@ -295,6 +230,82 @@ public class DetailActivity extends AppCompatActivity implements
                 }
             }
         });
+    }
+
+    private void initialiseViews() {
+        // Check if there is an existing product to make button visible so the user can order more from the existing product
+        if (productUri != null) {
+            // Initialise Order Button to order more from the supplier
+            orderButton = (Button) findViewById(R.id.button_order);
+            // Make Button visible
+            orderButton.setVisibility(View.VISIBLE);
+            orderButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setData(Uri.parse("mailto:"));
+                    intent.setType("text/plain");
+                    // Defining supplier's e-mail
+                    intent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.supplier_email));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, productName);
+                    startActivity(Intent.createChooser(intent, "Send e-mail..."));
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Fires an intent to spin up the "file chooser" UI and select an image.
+     */
+    public void performFileSearch() {
+
+        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+        // browser.
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+        // Filter to only show results that can be "opened", such as a
+        // file (as opposed to a list of contacts or timezones)
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Filter to show only images, using the image MIME data type.
+        // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+        // To search for all documents available via installed storage providers,
+        // it would be "*/*".
+        intent.setType("image/*");
+
+        startActivityForResult(intent, READ_REQUEST_CODE);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+
+        // The ACTION_OPEN_DOCUMENT intent was sent with the request code
+        // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
+        // response to some other intent, and the code below shouldn't run at all.
+
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+            Uri imageUri = null;
+            if (resultData != null) {
+                imageUri = resultData.getData();
+                Log.i(LOG_TAG, "Uri: " + imageUri.toString());
+                productImageView.setImageURI(imageUri);
+                final int takeFlags = resultData.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // Check for the freshest data.
+                getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
+        }
     }
 
     /**
