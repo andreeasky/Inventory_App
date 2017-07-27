@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.android.inventoryapp.R;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 public class ProductProvider extends ContentProvider {
@@ -134,6 +136,17 @@ public class ProductProvider extends ContentProvider {
         }
     }
 
+    if (newUri != null) {
+        // Show a toast message to inform the user that the insertion of the new product was successful.
+        Toast.makeText(this, getString(R.string.toast_add_product_successful),
+                Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+        else {
+        // Show error message
+    }
+
     /**
      * Insert a product into the database with the given content values. Return the new content URI
      * for that specific row in the database.
@@ -144,6 +157,7 @@ public class ProductProvider extends ContentProvider {
         if (name == null) {
             throw new IllegalArgumentException("Product requires a name");
         }
+
 
         // Check that the quantity is not null
         Integer quantity = contentValues.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
@@ -204,6 +218,17 @@ public class ProductProvider extends ContentProvider {
         }
     }
 
+    if (newUri != null) {
+        // Show a toast message to inform the user that the insertion of the new product was successful.
+        Toast.makeText(this, getString(R.string.toast_add_product_successful),
+                Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+        else {
+        // Show error message
+    }
+
     /**
      * Update products in the database with the given content values. Apply the changes to the rows
      * specified in the selection and selection arguments (which could be 0 or 1 or more products).
@@ -240,8 +265,9 @@ public class ProductProvider extends ContentProvider {
         // If the {@link ProductEntry#COLUMN_PRODUCT_IMAGE} key is present,
         // check that the image is not null.
         if (contentValues.containsKey(ProductEntry.COLUMN_PRODUCT_IMAGE)) {
-            contentValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE, imageUri.toString());
-            if (imageUri == null) {
+            String image = contentValues.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
+            contentValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE, image);
+            if (image == null) {
                 throw new IllegalArgumentException("Product requires an image");
             }
         }
@@ -267,7 +293,6 @@ public class ProductProvider extends ContentProvider {
         // Return the number of rows updated
         return rowsUpdated;
     }
-
 
 
     @Override

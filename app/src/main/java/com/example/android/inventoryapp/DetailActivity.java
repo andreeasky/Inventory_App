@@ -348,12 +348,14 @@ public class DetailActivity extends AppCompatActivity implements
                 // Show a toast message to inform the user that the insertion of the new product was successful.
                 Toast.makeText(this, getString(R.string.toast_add_product_successful),
                         Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 // If URI is not null, then we are updating and existing product
                 int newUri = getContentResolver().update(productUri, contentValues, null, null);
 
                 Toast.makeText(this, getString(R.string.toast_update_product_successful),
                         Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }
@@ -396,7 +398,6 @@ public class DetailActivity extends AppCompatActivity implements
                 // Save product to database
                 saveProduct();
                 // Exit activity
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.delete:
