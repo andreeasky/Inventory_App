@@ -96,13 +96,29 @@ public class DetailActivity extends AppCompatActivity implements
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the productHasChanged boolean to true.
      */
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+    private View.setOnClickListener mClickListener = new View.OnClickListener() {
         @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
+        public void onClick(View view, MotionEvent motionEvent) {
+            productHasChanged = true;
+            return false;
+        }
+    });
+
+        @Override
+        public boolean onClick(View view, MotionEvent motionEvent) {
             productHasChanged = true;
             return false;
         }
     };
+
+    selectImageButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            // do some action here
+        }
+    });
+
+
 
     // Convert from bitmap to byte array
     // Data retrieved from the user gallery that will be converted to byte[] in order to store in database BLOB
@@ -144,8 +160,8 @@ public class DetailActivity extends AppCompatActivity implements
         // Find all relevant views that need to be read or to show user input
         initialiseViews();
 
-        // Set on touch Listener to all relevant views
-        setOnTouchListener();
+        // Set OnClickListener to all relevant views
+        setOnClickListener();
 
     }
 
@@ -263,15 +279,15 @@ public class DetailActivity extends AppCompatActivity implements
     // Setup OnTouchListeners on all the input fields, so we can determine if the user
     // has touched or modified them. This will let us know if there are unsaved changes
     // or not, if the user tries to leave the editor without saving.
-    private void setOnTouchListener() {
-        nameEditText.setOnTouchListener(mTouchListener);
-        quantityEditText.setOnTouchListener(mTouchListener);
-        priceEditText.setOnTouchListener(mTouchListener);
-        increaseQuantityByOneButton.setOnTouchListener(mTouchListener);
-        decreaseQuantityByOneButton.setOnTouchListener(mTouchListener);
-        increaseQuantityByManyUnitsButton.setOnTouchListener(mTouchListener);
-        increaseQuantityByManyUnitsButton.setOnTouchListener(mTouchListener);
-        selectImageButton.setOnTouchListener(mTouchListener);
+    private void setOnClickListener() {
+        nameEditText.setOnClickListener(mClickListener);
+        quantityEditText.setOnClickListener(mClickListener);
+        priceEditText.setOnClickListener(mClickListener);
+        increaseQuantityByOneButton.setOnClickListener(mClickListener);
+        decreaseQuantityByOneButton.setOnClickListener(mClickListener);
+        increaseQuantityByManyUnitsButton.setOnClickListener(mClickListener);
+        increaseQuantityByManyUnitsButton.setOnClickListener(mClickListener);
+        selectImageButton.setOnClickListener(mClickListener);
 
     }
 
