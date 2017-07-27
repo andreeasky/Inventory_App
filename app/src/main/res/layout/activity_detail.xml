@@ -141,6 +141,7 @@
             android:hint="@string/edit_price"
             android:inputType="numberDecimal"
             android:textSize="15sp"
+            android:layout_marginLeft="35dp"
             android:textStyle="bold|italic" />
 
     </LinearLayout>
