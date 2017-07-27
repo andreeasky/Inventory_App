@@ -1,5 +1,6 @@
 package com.example.android.inventoryapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -10,12 +11,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 import java.io.ByteArrayOutputStream;
 
 import static com.example.android.inventoryapp.R.id.image;
+import static com.example.android.inventoryapp.data.ProductProvider.LOG_TAG;
 
 /**
  * Allows user to create a new product or edit an existing one.
@@ -92,6 +94,9 @@ public class DetailActivity extends AppCompatActivity implements
     private Button selectImageButton;
     private ImageView productImageView;
 
+    // Request code for accessing and using the photos from the storage of the device used
+    private static final int READ_REQUEST_CODE = 42;
+
     // Convert from bitmap to byte array
     // Data retrieved from the user gallery that will be converted to byte[] in order to store in database BLOB
     public static byte[] getBytes(Bitmap bitmap) {
@@ -128,29 +133,61 @@ public class DetailActivity extends AppCompatActivity implements
             getLoaderManager().initLoader(URI_LOADER, null, this);
         }
 
-
         // Find all relevant views that need to be read or to show user input
         initialiseViews();
 
         // Set OnClickListener to all relevant views
         setOnClickListener();
 
-        selectImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        /**
+         * Fires an intent to spin up the "file chooser" UI and select an image.
+         */
+        public void performFileSearch() {
 
-                Button selectImageButton = (Button) findViewById(R.id.button_choose_image);
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.ACTION_SEND, productImageView);
-                if (productImageView == null) {
-                    Toast.makeText(this, getString(R.string.toast_invalid_image_addition), Toast.LENGTH_SHORT).show();
-                } else {
-                    selectImageButton.addView(productImageView);
+            // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+            // browser.
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 
+            // Filter to only show results that can be "opened", such as a
+            // file (as opposed to a list of contacts or timezones)
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            // Filter to show only images, using the image MIME data type.
+            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+            // To search for all documents available via installed storage providers,
+            // it would be "*/*".
+            intent.setType("image/*");
+
+            startActivityForResult(intent, READ_REQUEST_CODE);
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode,
+        Intent resultData) {
+
+            // The ACTION_OPEN_DOCUMENT intent was sent with the request code
+            // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
+            // response to some other intent, and the code below shouldn't run at all.
+
+            if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+                // The document selected by the user won't be returned in the intent.
+                // Instead, a URI to that document will be contained in the return intent
+                // provided to this method as a parameter.
+                // Pull that URI using resultData.getData().
+                Uri uri = null;
+                if (resultData != null) {
+                    uri = resultData.getData();
+                    Log.i(LOG_TAG, "Uri: " + uri.toString());
+                    showImage(uri);
                 }
-
             }
-        });
+        }
+
+        final int takeFlags = intent.getFlags()
+                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        // Check for the freshest data.
+        getContentResolver().takePersistableUriPermission(uri, takeFlags);
     }
 
 
