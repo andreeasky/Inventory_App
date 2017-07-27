@@ -8,9 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.android.inventoryapp.R;
 import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 public class ProductProvider extends ContentProvider {
@@ -136,16 +134,6 @@ public class ProductProvider extends ContentProvider {
         }
     }
 
-    if (newUri != null) {
-        // Show a toast message to inform the user that the insertion of the new product was successful.
-        Toast.makeText(this, getString(R.string.toast_add_product_successful),
-                Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-        else {
-        // Show error message
-    }
 
     /**
      * Insert a product into the database with the given content values. Return the new content URI
@@ -216,17 +204,6 @@ public class ProductProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
-    }
-
-    if (newUri != null) {
-        // Show a toast message to inform the user that the insertion of the new product was successful.
-        Toast.makeText(this, getString(R.string.toast_add_product_successful),
-                Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-        else {
-        // Show error message
     }
 
     /**

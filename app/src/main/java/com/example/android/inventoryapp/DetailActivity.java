@@ -345,17 +345,31 @@ public class DetailActivity extends AppCompatActivity implements
                 // returning the content URI for the new product.
                 Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, contentValues);
 
-                // Show a toast message to inform the user that the insertion of the new product was successful.
-                Toast.makeText(this, getString(R.string.toast_add_product_successful),
-                        Toast.LENGTH_SHORT).show();
-                finish();
+                if (newUri != null) {
+                    // Show a toast message to inform the user that the insertion of the new product was successful.
+                    Toast.makeText(this, getString(R.string.toast_add_product_successful),
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+
+                } else {
+                    // show a toase message with an error
+                }
+
+
             } else {
                 // If URI is not null, then we are updating and existing product
                 int newUri = getContentResolver().update(productUri, contentValues, null, null);
 
-                Toast.makeText(this, getString(R.string.toast_update_product_successful),
-                        Toast.LENGTH_SHORT).show();
-                finish();
+                if (newUri != -1) {
+                    Toast.makeText(this, getString(R.string.toast_update_product_successful),
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+
+                } else {
+                    // sow an error message
+                }
+
+
             }
         }
     }
@@ -602,7 +616,3 @@ public class DetailActivity extends AppCompatActivity implements
         alertDialog.show();
     }
 }
-
-
-
-
