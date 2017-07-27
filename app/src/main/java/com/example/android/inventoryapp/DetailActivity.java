@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -17,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -92,34 +92,6 @@ public class DetailActivity extends AppCompatActivity implements
     private Button selectImageButton;
     private ImageView productImageView;
 
-    /**
-     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
-     * the view, and we change the productHasChanged boolean to true.
-     */
-    private View.setOnClickListener mClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view, MotionEvent motionEvent) {
-            productHasChanged = true;
-            return false;
-        }
-    });
-
-        @Override
-        public boolean onClick(View view, MotionEvent motionEvent) {
-            productHasChanged = true;
-            return false;
-        }
-    };
-
-    selectImageButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            // do some action here
-        }
-    });
-
-
-
     // Convert from bitmap to byte array
     // Data retrieved from the user gallery that will be converted to byte[] in order to store in database BLOB
     public static byte[] getBytes(Bitmap bitmap) {
@@ -163,7 +135,24 @@ public class DetailActivity extends AppCompatActivity implements
         // Set OnClickListener to all relevant views
         setOnClickListener();
 
+        selectImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Button selectImageButton = (Button) findViewById(R.id.button_choose_image);
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.ACTION_SEND, productImageView);
+                if (productImageView == null) {
+                    Toast.makeText(this, getString(R.string.toast_invalid_image_addition), Toast.LENGTH_SHORT).show();
+                } else {
+                    selectImageButton.addView(productImageView);
+
+                }
+
+            }
+        });
     }
+
 
     private void initialiseViews() {
         // Check if there is an existing product to make button visible so the user can order more from the existing product
@@ -193,6 +182,7 @@ public class DetailActivity extends AppCompatActivity implements
         nameEditText = (EditText) findViewById(R.id.edit_product_name);
         quantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         priceEditText = (EditText) findViewById(R.id.edit_price);
+        productImageView = (ImageView) findViewById(R.id.product_image);
 
         // Initialise TextView
         quantityTextView = (TextView) findViewById(R.id.quantity_final);
@@ -290,6 +280,8 @@ public class DetailActivity extends AppCompatActivity implements
         selectImageButton.setOnClickListener(mClickListener);
 
     }
+
+
 
     /**
      * Get user input from editor and save product into database.
