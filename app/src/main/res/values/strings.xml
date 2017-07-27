@@ -18,7 +18,7 @@
     <string name="button_increase_value">+</string>
     <string name="button_decrease_value">-</string>
     <string name="update_quantity">Update Quantity by:</string>
-    <string name="edit_text_quantity">7</string>
+    <string name="edit_text_quantity">0</string>
     <string name="edit_price">0.00</string>
     <string name="button_choose_image">Select Image</string>
     <string name="button_order">Order from Supplier</string>
