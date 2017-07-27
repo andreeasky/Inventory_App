@@ -57,6 +57,11 @@ public class ProductProvider extends ContentProvider {
     }
 
     /**
+     * imageUri - it is used to get an image uri string when saving data into the database.
+     */
+    Uri imageUri = null;
+
+    /**
      * Database helper object
      */
     private ProductDbHelper productDbHelper;
@@ -235,9 +240,11 @@ public class ProductProvider extends ContentProvider {
         // If the {@link ProductEntry#COLUMN_PRODUCT_IMAGE} key is present,
         // check that the image is not null.
         if (contentValues.containsKey(ProductEntry.COLUMN_PRODUCT_IMAGE)) {
-            String image = contentValues.getAsString(ProductEntry.COLUMN_PRODUCT_IMAGE);
-            if (image == null) {
+            contentValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE, imageUri.toString());
+            if (imageUri == null) {
                 throw new IllegalArgumentException("Product requires an image");
+
+
             }
         }
 

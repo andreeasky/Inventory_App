@@ -30,7 +30,6 @@ import com.example.android.inventoryapp.data.ProductContract.ProductEntry;
 
 import java.io.ByteArrayOutputStream;
 
-import static com.example.android.inventoryapp.R.id.image;
 import static com.example.android.inventoryapp.data.ProductProvider.LOG_TAG;
 
 /**
@@ -47,8 +46,14 @@ public class DetailActivity extends AppCompatActivity implements
      * URI loader
      */
     private static final int URI_LOADER = 0;
-    // Request code for accessing and using the photos from the storage of the device used
+    /**
+     * Request code for accessing and using the photos from the storage of the device used
+     */
     private static final int READ_REQUEST_CODE = 42;
+    /**
+     * imageUri - it is used to get an image uri string when saving data into the database.
+     */
+    Uri imageUri = null;
     /**
      * Content URI for the existing product (null if it's a new product)
      */
@@ -90,9 +95,8 @@ public class DetailActivity extends AppCompatActivity implements
     private Button increaseQuantityByManyUnitsButton;    // Increase by many (n)
     private Button decreaseQuantityByManyUnitsButton;    // Decrease by many (n)
     /**
-     * Button to select image, ImageView to display selected image
+     * ImageView to display selected image
      */
-
     private ImageView productImageView;
 
     // Convert from bitmap to byte array
@@ -254,7 +258,6 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
-
     /**
      * Fires an intent to spin up the "file chooser" UI and select an image.
      */
@@ -291,7 +294,6 @@ public class DetailActivity extends AppCompatActivity implements
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.
             // Pull that URI using resultData.getData().
-            Uri imageUri = null;
             if (resultData != null) {
                 imageUri = resultData.getData();
                 Log.i(LOG_TAG, "Uri: " + imageUri.toString());
@@ -335,7 +337,7 @@ public class DetailActivity extends AppCompatActivity implements
             contentValues.put(ProductEntry.COLUMN_PRODUCT_NAME, name);
             contentValues.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, productQuantity);
             contentValues.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
-            contentValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE, image);
+            contentValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE, String.valueOf(imageUri));
 
             // Determine if this is a new or existing product by checking if productUri is null or not
             if (productUri == null) {
@@ -498,8 +500,9 @@ public class DetailActivity extends AppCompatActivity implements
             nameEditText.setText(productName);
             productQuantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
             priceEditText.setText(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE)));
-            if (cursor.getBlob(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)) != null) {
-                productImageView.setImageBitmap(getImage(cursor.getBlob(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE))));
+            if (cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)) != null) {
+                imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)));
+                productImageView.setImageURI(imageUri);
             }
         }
     }
