@@ -199,7 +199,7 @@ public class DetailActivity extends AppCompatActivity implements
                     quantityTextView.setText(String.valueOf(productQuantity));
                 } else {
                     //Show toast asking user to fill in Edit Text
-                    Toast.makeText(DetailActivity.this, getString(R.string.toast_missing_quantity), Toast.LENGTH_SHORT);
+                    Toast.makeText(DetailActivity.this, getString(R.string.toast_missing_quantity), Toast.LENGTH_SHORT).show();
                     productQuantity++;
                     //Update UI
                     quantityTextView.setText(String.valueOf(productQuantity));
@@ -316,14 +316,14 @@ public class DetailActivity extends AppCompatActivity implements
         boolean nameIsEmpty = checkFieldEmpty(nameEditText.getText().toString().trim());
         boolean priceIsEmpty = checkFieldEmpty(priceEditText.getText().toString().trim());
 
-        // Check if Name, Quantity or Price are null / zero and inform the user to change to a valid value
+        // Check if Name, Quantity or Price and Image are null / zero and inform the user to change to a valid value
         if (nameIsEmpty) {
             Toast.makeText(this, getString(R.string.toast_invalid_name_addition), Toast.LENGTH_SHORT).show();
         } else if (productQuantity <= 0) {
             Toast.makeText(this, getString(R.string.toast_invalid_quantity_addition), Toast.LENGTH_SHORT).show();
         } else if (priceIsEmpty) {
             Toast.makeText(this, getString(R.string.toast_invalid_price_addition), Toast.LENGTH_SHORT).show();
-        } else if (productImageView == null) {
+        } else if (imageUri == null) {
             Toast.makeText(this, getString(R.string.toast_invalid_image_addition), Toast.LENGTH_SHORT).show();
         } else {
             // Assuming that all fields are valid, pass the Edit Text value for the name to a String
@@ -499,10 +499,12 @@ public class DetailActivity extends AppCompatActivity implements
             productName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME));
             nameEditText.setText(productName);
             productQuantity = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY));
+            quantityEditText.setText(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY)));
             priceEditText.setText(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE)));
             if (cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)) != null) {
                 imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_IMAGE)));
                 productImageView.setImageURI(imageUri);
+
             }
         }
     }
@@ -591,14 +593,8 @@ public class DetailActivity extends AppCompatActivity implements
                 finish();
             }
         });
-        builder.setNegativeButton(R.string.option_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog and continue editing the product.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
+        // User clicked the "Cancel" button, so dismiss the dialog and continue editing the product.
+        builder.setNegativeButton(R.string.option_cancel, null);
 
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();

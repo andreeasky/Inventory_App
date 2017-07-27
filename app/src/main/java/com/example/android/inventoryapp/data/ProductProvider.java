@@ -243,8 +243,6 @@ public class ProductProvider extends ContentProvider {
             contentValues.put(ProductEntry.COLUMN_PRODUCT_IMAGE, imageUri.toString());
             if (imageUri == null) {
                 throw new IllegalArgumentException("Product requires an image");
-
-
             }
         }
 
@@ -269,6 +267,8 @@ public class ProductProvider extends ContentProvider {
         // Return the number of rows updated
         return rowsUpdated;
     }
+
+
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
